@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Doublecheese1/agentsolis",
+  "title": "AgentSolis",
+  "description": "Prepare unsigned USDC escrow transactions and read deal status on Arbitrum One. Never holds keys.",
+  "websiteUrl": "https://agentsolis.solists.com.tr",
+  "repository": {
+    "url": "https://github.com/Doublecheese1/agentsolis-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "agentsolis-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "AGENTSOLIS_RPC_URL",
+          "description": "Optional HTTPS Arbitrum RPC URL. Defaults to the public arb1 endpoint. Not a credential.",
+          "isRequired": false,
+          "isSecret": false,
+          "default": "https://arb1.arbitrum.io/rpc"
+        },
+        {
+          "name": "AGENTSOLIS_CHAIN",
+          "description": "arbitrum-one or arbitrum-sepolia. Defaults to arbitrum-one.",
+          "isRequired": false,
+          "isSecret": false,
+          "default": "arbitrum-one"
+        },
+        {
+          "name": "AGENTSOLIS_CONFIG_URL",
+          "description": "Optional public config URL. Defaults to the AgentSolis mainnet config.",
+          "isRequired": false,
+          "isSecret": false,
+          "default": "https://agentsolis.solists.com.tr/mainnet/config"
+        }
+      ]
+    }
+  ]
+}

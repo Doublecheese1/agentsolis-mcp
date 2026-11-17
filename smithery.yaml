@@ -1,0 +1,34 @@
+# Smithery stdio config. Publishing needs the owner's Smithery account. Do not put credentials here.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required: []
+    properties:
+      rpcUrl:
+        type: string
+        default: https://arb1.arbitrum.io/rpc
+        description: Optional public HTTPS RPC URL. Not a credential.
+      chain:
+        type: string
+        enum: [arbitrum-one, arbitrum-sepolia]
+        default: arbitrum-one
+        description: Chain name. Must match the RPC.
+      configUrl:
+        type: string
+        default: https://agentsolis.solists.com.tr/mainnet/config
+        description: Optional public config URL.
+  commandFunction: |-
+    (config) => ({
+      command: 'node',
+      args: ['dist/index.js'],
+      env: {
+        AGENTSOLIS_RPC_URL: config.rpcUrl,
+        AGENTSOLIS_CHAIN: config.chain,
+        AGENTSOLIS_CONFIG_URL: config.configUrl
+      }
+    })
+  exampleConfig:
+    rpcUrl: https://arb1.arbitrum.io/rpc
+    chain: arbitrum-one
+    configUrl: https://agentsolis.solists.com.tr/mainnet/config

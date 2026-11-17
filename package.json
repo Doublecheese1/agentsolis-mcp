@@ -1,0 +1,52 @@
+{
+  "name": "agentsolis-mcp",
+  "version": "0.1.0",
+  "description": "Prepare unsigned USDC escrow transactions and read deal status on Arbitrum One. Never holds keys.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Solis Trade Solutions",
+  "homepage": "https://agentsolis.solists.com.tr",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Doublecheese1/agentsolis-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Doublecheese1/agentsolis-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "escrow",
+    "usdc",
+    "arbitrum",
+    "ai-agents"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "agentsolis-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "mcpName": "io.github.Doublecheese1/agentsolis",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "viem": "2.57.19",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0"
+  }
+}
