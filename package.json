@@ -1,7 +1,7 @@
 {
   "name": "agentsolis-mcp",
-  "version": "0.1.0",
-  "description": "Prepare unsigned USDC escrow transactions and read deal status on Arbitrum One. Never holds keys.",
+  "version": "0.2.0",
+  "description": "Wallet-free escrow sandbox, plus unsigned USDC deal prep on Arbitrum One. Never holds keys.",
   "type": "module",
   "license": "MIT",
   "author": "Solis Trade Solutions",

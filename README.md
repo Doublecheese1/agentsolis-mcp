@@ -2,11 +2,48 @@
 
 A local [Model Context Protocol](https://modelcontextprotocol.io) server for [AgentSolis](https://agentsolis.solists.com.tr), a USDC escrow flow on Arbitrum One.
 
-An agent can read the public config, quote the protocol fee, build an **unsigned** transaction for a buyer-started deal, and read a deal from the chain. The server does not hold a wallet, does not sign, and does not broadcast. The wallet owner signs on the AgentSolis site or in their own wallet.
+An agent can try a full escrow deal in a **wallet-free sandbox**, read the public config, quote the protocol fee, build an **unsigned** transaction for a buyer-started deal, and read a deal from the chain. The server does not hold a wallet, does not sign, and does not broadcast. The wallet owner signs on the AgentSolis site or in their own wallet.
 
 AgentSolis never asks for a private key or seed phrase.
 
-The package uses the MIT license. Publishing the package remains a separate owner decision.
+The package is on npm as [`agentsolis-mcp`](https://www.npmjs.com/package/agentsolis-mcp) and uses the MIT license.
+
+## Try it with no wallet (2 minutes)
+
+You need Node.js 20 or newer. No wallet, no USDC, no API key, no environment variables.
+
+**1. Add the server to your client.**
+
+Claude Code:
+
+```bash
+claude mcp add agentsolis -- npx -y agentsolis-mcp
+```
+
+Claude Desktop (`claude_desktop_config.json`) or Cursor (`~/.cursor/mcp.json` or `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "agentsolis": {
+      "command": "npx",
+      "args": ["-y", "agentsolis-mcp"]
+    }
+  }
+}
+```
+
+Restart the client after editing the file.
+
+**2. Ask your agent:**
+
+> Use the AgentSolis sandbox tools to create a 25 USDC deal for "Write a 500-word blog post", deliver it, release it, and explain who got paid.
+
+Or pick the `try_sandbox` prompt if your client shows MCP prompts.
+
+**3. What happens.** The agent calls `sandbox_create_deal`, then `sandbox_advance_deal` with `deliver` and `release`. Every reply is labeled `SANDBOX - simulated, no real funds`. Sandbox deals live only in the memory of the running server. Nothing touches a blockchain.
+
+When you want a real deal, `prepare_deal` builds the unsigned transactions and your own wallet signs them.
 
 ## What it is not
 
@@ -16,17 +53,18 @@ The package uses the MIT license. Publishing the package remains a separate owne
 - It prepares buyer-started deals only. Seller-started offers are quoted, not built.
 - It does not move funds. Funds are locked, then paid out, refunded or split by the agreed rules, only after a wallet signs and the network accepts the transaction.
 - It is not a hosted service. This package speaks stdio.
+- The sandbox is a simplified simulation. Real deals also have deadlines, fallback splits and Buyer Review arbitration.
 
-## Honest limits (17 Nov 2026)
+## Honest limits (23 Nov 2026)
 
 - Escrow contract: source verified on Arbiscan and Sourcify (14 Nov 2026); no independent review yet.
 - There is no production x402 integration.
 - No deals have been recorded yet.
 - The contract is not upgradeable. Pause stops new deals only. Fee changes wait 48 hours and stay at or below 3% and a 100 USDC cap. The team holds the owner keys. This server does not.
 
-## Install and run
+## Install from source
 
-Node.js 20 or newer.
+Node.js 20 or newer. Only needed if you want to change the code; otherwise use `npx -y agentsolis-mcp` as above.
 
 ```bash
 git clone https://github.com/Doublecheese1/agentsolis-mcp.git
@@ -49,35 +87,7 @@ Optional public settings, also listed in `.env.example`:
 
 The RPC chain id must be 42161 or 421614 and must match `AGENTSOLIS_CHAIN`. Any other chain is refused. `prepare_deal` only builds chain 42161 transactions.
 
-## After npm publish (not published yet)
-
-Once the package is on npm, a client can start it with `npx -y agentsolis-mcp` instead of a local path:
-
-```json
-{
-  "mcpServers": {
-    "agentsolis": {
-      "command": "npx",
-      "args": ["-y", "agentsolis-mcp"]
-    }
-  }
-}
-```
-
-## Claude Desktop (local build)
-
-```json
-{
-  "mcpServers": {
-    "agentsolis": {
-      "command": "node",
-      "args": ["/absolute/path/to/agentsolis-mcp/dist/index.js"]
-    }
-  }
-}
-```
-
-## Cursor (local build)
+## Claude Desktop or Cursor with a local build
 
 ```json
 {
@@ -91,6 +101,16 @@ Once the package is on npm, a client can start it with `npx -y agentsolis-mcp` i
 ```
 
 ## Tools
+
+### Sandbox tools (no wallet, simulated)
+
+All three work offline, keep state only in memory, and label every reply `SANDBOX - simulated, no real funds`.
+
+- `sandbox_create_deal` — inputs: `amount_usdc`, `job_description`, optional `mode` (`automatic` default, or `buyer_review`). Returns a `sandbox-…` deal id in state `funded`, with the job amount, fee and simulated locked deposit, using the same fee math as `quote_fee`.
+- `sandbox_advance_deal` — inputs: `deal_id`, `action`. `deliver` (funded → delivered), `release` (delivered → released: seller paid, fee charged), `refund` (funded → refunded: buyer gets everything back, no fee). Each reply lists the allowed next actions.
+- `sandbox_get_deal` — input: `deal_id`. Returns state, amounts, payout and history.
+
+Prompt: `try_sandbox` walks through a release and a refund using only the sandbox tools.
 
 ### `get_config`
 
@@ -146,6 +166,10 @@ Reads `deals(bytes32)` with `eth_call`. Returns the mode, state, parties, amount
 
 - `agentsolis://addresses` — escrow and USDC addresses, with mainnet and the paused Sepolia deployment labeled separately.
 - `agentsolis://rules` — modes, fee, bond, limits, and the honest "not done" list.
+
+## Prompts
+
+- `try_sandbox` — a guided, wallet-free walkthrough of the sandbox tools.
 
 ## Links
 

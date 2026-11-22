@@ -48,8 +48,9 @@ export const rulesResource = {
     "Funds are locked, then paid out, refunded or split by the agreed rules.",
     "The contract is not upgradeable. Pause stops new deals only. Fee changes have a 48-hour delay and stay at or below 3% and a 100 USDC cap. The team holds the owner keys. This tool does not.",
     "",
-    "Not done, as of 14 Nov 2026:",
-    "- Contract source was not verified on Sourcify (no match).",
+    "Escrow contract: source verified on Arbiscan and Sourcify (14 Nov 2026); no independent review yet.",
+    "",
+    "Not done, as of 23 Nov 2026:",
     "- No independent review.",
     "- No production x402.",
     "- No deals recorded yet.",
@@ -58,5 +59,6 @@ export const rulesResource = {
     "AgentSolis never asks for a private key or seed phrase.",
     "Live config: https://agentsolis.solists.com.tr/mainnet/config",
     "Wallet-free demo: https://agentsolis.solists.com.tr/play",
+    "Wallet-free MCP tools: sandbox_create_deal, sandbox_advance_deal, sandbox_get_deal (simulated, no real funds).",
   ].join("\n"),
 };
